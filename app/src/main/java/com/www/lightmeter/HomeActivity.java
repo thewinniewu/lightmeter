@@ -8,51 +8,35 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 
 public class HomeActivity extends Activity implements SensorEventListener {
-    private SensorManager mSensorManager;
-    private Sensor lightSensor;
-
-    private View isoView;
-    private View apertureView;
-    private View speedView;
-    private View variableView;
+    private LightMeterController controller;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
 
-        isoView = findViewById(R.id.iso_button);
-        apertureView = findViewById(R.id.aperture_button);
-        speedView = findViewById(R.id.speed_button);
-        variableView = findViewById(R.id.variable_button);
-
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        lightSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-
-        initializeListeners();
-    }
-
-    private void initializeListeners() {
-
+        controller = new LightMeterController(this);
+        View view = new LightMeterView(this, controller);
+        setContentView(view);
     }
 
     protected void onResume() {
         super.onResume();
-        mSensorManager.registerListener(this, lightSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        controller.registerSensor();
     }
 
     protected void onPause() {
         super.onPause();
-        mSensorManager.unregisterListener(this);
+        controller.unregisterSensor();
     }
 
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
     }
 
     public void onSensorChanged(SensorEvent event) {
-        Log.e("www", "" + event.values[0]);
+        ((TextView) findViewById(R.id.debug_data)).setText("" + event.values[0]);
     }
 }
