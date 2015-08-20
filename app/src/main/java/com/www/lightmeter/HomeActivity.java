@@ -6,22 +6,18 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 
 public class HomeActivity extends Activity implements SensorEventListener {
-    private final SensorManager mSensorManager;
-    private final Sensor lightSensor;
+    private SensorManager mSensorManager;
+    private Sensor lightSensor;
 
     private View isoView;
     private View apertureView;
     private View speedView;
     private View variableView;
-
-    public HomeActivity() {
-        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
-        lightSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +28,9 @@ public class HomeActivity extends Activity implements SensorEventListener {
         apertureView = findViewById(R.id.aperture_button);
         speedView = findViewById(R.id.speed_button);
         variableView = findViewById(R.id.variable_button);
+
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        lightSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
 
         initializeListeners();
     }
@@ -54,5 +53,6 @@ public class HomeActivity extends Activity implements SensorEventListener {
     }
 
     public void onSensorChanged(SensorEvent event) {
+        Log.e("www", "" + event.values[0]);
     }
 }
