@@ -1,17 +1,10 @@
 package com.www.lightmeter;
 
 import android.app.Activity;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
-
-public class HomeActivity extends Activity implements SensorEventListener {
+public class HomeActivity extends Activity {
     private LightMeterController controller;
 
     @Override
@@ -31,12 +24,5 @@ public class HomeActivity extends Activity implements SensorEventListener {
     protected void onPause() {
         super.onPause();
         controller.unregisterSensor();
-    }
-
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-    }
-
-    public void onSensorChanged(SensorEvent event) {
-        ((TextView) findViewById(R.id.debug_data)).setText("" + event.values[0]);
     }
 }
