@@ -17,6 +17,9 @@ public class LightMeterController implements SensorEventListener {
     private LightMeterView view;
     private LightMeterModel model;
 
+    private double[] isoBrackets = {100, 200, 320, 400, 500, 640, 800, 1000, 1250, 1600, 2500, 3200, 6400};
+    private double[] apertureBrackets = {1.4, 1.7, 1.8, 2.0, 2.2, 2.5, 2.8, 3.5, 4.0, 5.0, 5.6, 6.3, 7.0, 8.0, 9.0, 11.0, 16.0, 22.0};
+
     public LightMeterController(Context context) {
         model = new LightMeterModel();
 
@@ -77,5 +80,19 @@ public class LightMeterController implements SensorEventListener {
                 n = (int) (x * 64) % 64,
                 a = n & -n;
         return w + (n == 0 ? "" : " " + n / a + "/" + 64 / a);
+    }
+
+    double findQuantizedValue(double actual) {
+        double[] quantizedArray = model.getMeterVariable() == LightMeterModel.MeterVariable.ISO ? isoBrackets : apertureBrackets;
+        double correctVal = -1;
+        for (int i = 0; i < quantizedArray.length; i++) {
+            if (actual > quantizedArray[i]) {
+                continue;
+            } else {
+                correctVal = quantizedArray[i];
+                break;
+            }
+        }
+        return correctVal;
     }
 }
