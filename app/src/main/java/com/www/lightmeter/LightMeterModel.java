@@ -35,7 +35,6 @@ public class LightMeterModel {
             "1 / 2",
     };
 
-
     public enum MeterVariable {
         ISO(new Variable(isoBrackets, null)),
         APERTURE(new Variable(apertureBrackets, null)),

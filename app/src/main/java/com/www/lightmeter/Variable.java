@@ -43,7 +43,8 @@ public class Variable {
     private String formatDoubleString(String string) {
         String newString = "";
         for (int i = 0; i < string.length(); i++) {
-            if (string.charAt(i) == '.' && string.charAt(i + 1) == '0' && i != string.length() - 1) {
+            if (i < string.length() - 1 && string.charAt(i) == '.' && string.charAt(i + 1) == '0') {
+                i++;
                 continue;
             }
             newString += string.charAt(i);

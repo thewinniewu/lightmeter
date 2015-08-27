@@ -17,33 +17,9 @@ public class LightMeterController implements SensorEventListener {
     private LightMeterView view;
     private LightMeterModel model;
 
-    private static double[] isoBrackets = {100, 200, 320, 400, 500, 640, 800, 1000, 1250, 1600, 2500, 3200, 6400};
-    private static double[] apertureBrackets = {1.4, 1.7, 1.8, 2.0, 2.2, 2.5, 2.8, 3.5, 4.0, 5.0, 5.6, 6.3, 7.0, 8.0, 9.0, 11.0, 16.0, 22.0};
-    private double[] shutterBrackets = {
-            1.0 / 4000.0,
-            1.0 / 2000.0,
-            1.0 / 1000.0,
-            1.0 / 500.0,
-            1.0 / 250.0,
-            1.0 / 125.0,
-            1.0 / 60.0,
-            1.0 / 30.0,
-            1.0 / 15.0,
-            1.0 / 8.0,
-            1.0 / 4.0,
-            1.0 / 2.0,
-    };
-
-    private enum Stops {
-        ISO(isoBrackets);
-
-        private double[] vals;
-
-        Stops(double[] vals) {
-            this.vals = vals;
-        }
-    }
-
+    private Variable iso = LightMeterModel.MeterVariable.ISO.variable;
+    private Variable aperture = LightMeterModel.MeterVariable.APERTURE.variable;
+    private Variable speed = LightMeterModel.MeterVariable.SHUTTER_SPEED.variable;
 
     public LightMeterController(Context context) {
         model = new LightMeterModel();
@@ -85,8 +61,8 @@ public class LightMeterController implements SensorEventListener {
                 Log.e("www", "new speed" + newSpeed);
                 newSpeed = findQuantizedValue(newSpeed);
                 model.setShutterSpeed(newSpeed);
-                view.setShutterSpeed(toMixedFraction(newSpeed));
-                s = LightMeterModel.MeterVariable.SHUTTER_SPEED.variable.valToString(model.getShutterSpeed());
+                s = speed.valToString(model.getShutterSpeed());
+                view.setShutterSpeed(s);
                 break;
             case APERTURE:
                 double newAperture = Math.sqrt((lux * t * S) / LIGHTMETER_CONST);
@@ -94,7 +70,7 @@ public class LightMeterController implements SensorEventListener {
                 newAperture = findQuantizedValue(newAperture);
                 model.setAperture(newAperture);
                 view.setAperture(newAperture);
-                s = "" + newAperture;
+                s = aperture.valToString(model.getAperture());
                 break;
             case ISO:
                 double newIso = (LIGHTMETER_CONST * N * N) / (t * lux);
@@ -102,31 +78,14 @@ public class LightMeterController implements SensorEventListener {
                 Log.e("www", "new iso" + newIso);
                 model.setIso(newIso);
                 view.setIso(newIso);
-                s = "" + newIso;
+                s = iso.valToString(model.getIso());
                 break;
         }
         view.setVariableView(s);
     }
 
-    String toMixedFraction(double x) {
-        int w = (int) x,
-                n = (int) (x * 64) % 64,
-                a = n & -n;
-        return w + (n == 0 ? "" : " " + n / a + "/" + 64 / a);
-    }
-
     double findQuantizedValue(double actual) {
-        double[] quantizedArray = {};
-        switch (model.getMeterVariable()) {
-            case ISO:
-                quantizedArray = isoBrackets;
-                break;
-            case SHUTTER_SPEED:
-                quantizedArray = shutterBrackets;
-                break;
-            case APERTURE:
-                quantizedArray = apertureBrackets;
-        }
+        double[] quantizedArray = model.getMeterVariable().variable.keys;
         double correctVal = -1;
         for (int i = 0; i < quantizedArray.length; i++) {
             if (actual > quantizedArray[i]) {
