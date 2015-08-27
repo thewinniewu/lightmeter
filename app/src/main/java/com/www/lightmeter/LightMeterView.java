@@ -31,6 +31,8 @@ public class LightMeterView extends FrameLayout {
         speedView = (TextView) findViewById(R.id.speed_button);
         variableView = findViewById(R.id.variable_button);
 
+        controller.initNonvariables();
+
         initializeListeners();
     }
 
