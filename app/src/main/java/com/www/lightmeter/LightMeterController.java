@@ -17,8 +17,8 @@ public class LightMeterController implements SensorEventListener {
     private LightMeterView view;
     private LightMeterModel model;
 
-    private double[] isoBrackets = {100, 200, 320, 400, 500, 640, 800, 1000, 1250, 1600, 2500, 3200, 6400};
-    private double[] apertureBrackets = {1.4, 1.7, 1.8, 2.0, 2.2, 2.5, 2.8, 3.5, 4.0, 5.0, 5.6, 6.3, 7.0, 8.0, 9.0, 11.0, 16.0, 22.0};
+    private static double[] isoBrackets = {100, 200, 320, 400, 500, 640, 800, 1000, 1250, 1600, 2500, 3200, 6400};
+    private static double[] apertureBrackets = {1.4, 1.7, 1.8, 2.0, 2.2, 2.5, 2.8, 3.5, 4.0, 5.0, 5.6, 6.3, 7.0, 8.0, 9.0, 11.0, 16.0, 22.0};
     private double[] shutterBrackets = {
             1.0 / 4000.0,
             1.0 / 2000.0,
@@ -34,18 +34,22 @@ public class LightMeterController implements SensorEventListener {
             1.0 / 2.0,
     };
 
+    private enum Stops {
+        ISO(isoBrackets);
+
+        private double[] vals;
+
+        Stops(double[] vals) {
+            this.vals = vals;
+        }
+    }
+
+
     public LightMeterController(Context context) {
         model = new LightMeterModel();
 
         mSensorManager = (SensorManager) context.getSystemService(context.SENSOR_SERVICE);
         lightSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);
-    }
-
-    // for testing
-    public LightMeterController(LightMeterModel model, SensorManager mockSensorManager, Sensor mockLightSensor) {
-        this.model = model;
-        mSensorManager = mockSensorManager;
-        lightSensor = mockLightSensor;
     }
 
     public void setView(LightMeterView view) {
@@ -82,7 +86,7 @@ public class LightMeterController implements SensorEventListener {
                 newSpeed = findQuantizedValue(newSpeed);
                 model.setShutterSpeed(newSpeed);
                 view.setShutterSpeed(toMixedFraction(newSpeed));
-                s = toMixedFraction(newSpeed);
+                s = LightMeterModel.MeterVariable.SHUTTER_SPEED.variable.valToString(model.getShutterSpeed());
                 break;
             case APERTURE:
                 double newAperture = Math.sqrt((lux * t * S) / LIGHTMETER_CONST);
@@ -143,7 +147,7 @@ public class LightMeterController implements SensorEventListener {
     void initNonvariables() {
         view.setAperture(model.getAperture());
         view.setIso(model.getIso());
-        view.setShutterSpeed(toMixedFraction(model.getShutterSpeed()));
+        view.setShutterSpeed(LightMeterModel.MeterVariable.SHUTTER_SPEED.variable.valToString(model.getShutterSpeed()));
         view.setActive(model.getMeterVariable());
     }
 }
