@@ -60,7 +60,6 @@ public class LightMeterController implements SensorEventListener {
             case SHUTTER_SPEED:
                 double newSpeed = (LIGHTMETER_CONST * N * N) / (S * lux);
                 Log.e("www", "new speed" + newSpeed);
-                newSpeed = findQuantizedValue(newSpeed);
                 model.setShutterSpeed(newSpeed);
                 s = speed.valToString(model.getShutterSpeed());
                 view.setShutterSpeed(s);
@@ -68,14 +67,12 @@ public class LightMeterController implements SensorEventListener {
             case APERTURE:
                 double newAperture = Math.sqrt((lux * t * S) / LIGHTMETER_CONST);
                 Log.e("www", "new aperture" + newAperture);
-                newAperture = findQuantizedValue(newAperture);
                 model.setAperture(newAperture);
-                view.setAperture(newAperture);
+                view.setAperture(model.getAperture());
                 s = aperture.valToString(model.getAperture());
                 break;
             case ISO:
                 double newIso = (LIGHTMETER_CONST * N * N) / (t * lux);
-                newIso = findQuantizedValue(newIso);
                 Log.e("www", "new iso" + newIso);
                 model.setIso(newIso);
                 view.setIso(newIso);
@@ -83,20 +80,6 @@ public class LightMeterController implements SensorEventListener {
                 break;
         }
         view.setVariableView(s);
-    }
-
-    double findQuantizedValue(double actual) {
-        double[] quantizedArray = model.getMeterVariable().variable.keys;
-        double correctVal = -1;
-        for (int i = 0; i < quantizedArray.length; i++) {
-            if (actual > quantizedArray[i]) {
-                continue;
-            } else {
-                correctVal = quantizedArray[i];
-                break;
-            }
-        }
-        return correctVal;
     }
 
     void changeVariable(LightMeterModel.MeterVariable variable) {

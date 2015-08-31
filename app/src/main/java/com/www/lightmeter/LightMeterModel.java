@@ -49,9 +49,10 @@ public class LightMeterModel {
 
     private MeterVariable meterVariable = MeterVariable.SHUTTER_SPEED;
     private float lux;
-    private double aperture = 2.2;
-    private double shutterSpeed =  1/50.0;
-    private double iso = 400.0;
+
+    Variable aperture = new Variable(apertureBrackets, null);
+    Variable shutterSpeed = new Variable(shutterBrackets, shutterBracketStrings);
+    Variable iso = new Variable(isoBrackets, null);
 
     public MeterVariable getMeterVariable() {
         return meterVariable;
@@ -70,26 +71,26 @@ public class LightMeterModel {
     }
 
     public double getAperture() {
-        return aperture;
+        return aperture.getCurrentVal();
     }
 
     public void setAperture(double aperture) {
-        this.aperture = aperture;
+        this.aperture.setQuantizedValue(aperture);
     }
 
     public double getShutterSpeed() {
-        return shutterSpeed;
+        return shutterSpeed.getCurrentVal();
     }
 
     public void setShutterSpeed(double shutterSpeed) {
-        this.shutterSpeed = shutterSpeed;
+        this.shutterSpeed.setQuantizedValue(shutterSpeed);
     }
 
     public double getIso() {
-        return iso;
+        return iso.getCurrentVal();
     }
 
     public void setIso(double iso) {
-        this.iso = iso;
+        this.aperture.setQuantizedValue(iso);
     }
 }
