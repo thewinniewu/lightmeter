@@ -18,10 +18,6 @@ public class LightMeterController implements SensorEventListener {
     private LightMeterView view;
     private LightMeterModel model;
 
-    private Variable iso = LightMeterModel.MeterVariable.ISO.variable;
-    private Variable aperture = LightMeterModel.MeterVariable.APERTURE.variable;
-    private Variable speed = LightMeterModel.MeterVariable.SHUTTER_SPEED.variable;
-
     public LightMeterController(Context context) {
         model = new LightMeterModel();
 
@@ -61,7 +57,7 @@ public class LightMeterController implements SensorEventListener {
                 double newSpeed = (LIGHTMETER_CONST * N * N) / (S * lux);
                 Log.e("www", "new speed" + newSpeed);
                 model.setShutterSpeed(newSpeed);
-                s = speed.valToString(model.getShutterSpeed());
+                s = model.getShutterSpeedString();
                 view.setShutterSpeed(s);
                 break;
             case APERTURE:
@@ -69,14 +65,14 @@ public class LightMeterController implements SensorEventListener {
                 Log.e("www", "new aperture" + newAperture);
                 model.setAperture(newAperture);
                 view.setAperture(model.getAperture());
-                s = aperture.valToString(model.getAperture());
+                s = model.getApertureString();
                 break;
             case ISO:
                 double newIso = (LIGHTMETER_CONST * N * N) / (t * lux);
                 Log.e("www", "new iso" + newIso);
                 model.setIso(newIso);
                 view.setIso(newIso);
-                s = iso.valToString(model.getIso());
+                s = model.getIsoString();
                 break;
         }
         view.setVariableView(s);
@@ -90,7 +86,7 @@ public class LightMeterController implements SensorEventListener {
     void initNonvariables() {
         view.setAperture(model.getAperture());
         view.setIso(model.getIso());
-        view.setShutterSpeed(LightMeterModel.MeterVariable.SHUTTER_SPEED.variable.valToString(model.getShutterSpeed()));
+        view.setShutterSpeed(model.getShutterSpeedString());
         view.setActive(model.getMeterVariable());
     }
 }

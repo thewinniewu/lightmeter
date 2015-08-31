@@ -29,6 +29,10 @@ public class Variable {
         return keys[currentIndex];
     }
 
+    public String getCurrentValAsString() {
+        return valToString(keys[currentIndex]);
+    }
+
     public double nextVal() {
         currentIndex = Math.min(currentIndex + 1, keys.length);
         return keys[currentIndex];
