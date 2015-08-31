@@ -35,23 +35,17 @@ public class LightMeterModel {
             "1 / 2",
     };
 
+    Variable aperture = new Variable(apertureBrackets, null);
+    Variable shutterSpeed = new Variable(shutterBrackets, shutterBracketStrings);
+    Variable iso = new Variable(isoBrackets, null);
+
     public enum MeterVariable {
-        ISO(new Variable(isoBrackets, null)),
-        APERTURE(new Variable(apertureBrackets, null)),
-        SHUTTER_SPEED(new Variable(shutterBrackets, shutterBracketStrings));
-
-        Variable variable;
-
-        MeterVariable(Variable variable) {
-            this.variable = variable;
-        }
+        ISO, APERTURE, SHUTTER_SPEED
     }
 
     private MeterVariable meterVariable = MeterVariable.SHUTTER_SPEED;
     private float lux;
-    private double aperture = 2.2;
-    private double shutterSpeed =  1/50.0;
-    private double iso = 400.0;
+
 
     public MeterVariable getMeterVariable() {
         return meterVariable;
@@ -70,26 +64,38 @@ public class LightMeterModel {
     }
 
     public double getAperture() {
-        return aperture;
+        return aperture.getCurrentVal();
+    }
+
+    public String getApertureString() {
+        return aperture.getCurrentValAsString();
     }
 
     public void setAperture(double aperture) {
-        this.aperture = aperture;
+        this.aperture.setQuantizedValue(aperture);
     }
 
     public double getShutterSpeed() {
-        return shutterSpeed;
+        return shutterSpeed.getCurrentVal();
+    }
+
+    public String getShutterSpeedString() {
+        return shutterSpeed.getCurrentValAsString();
     }
 
     public void setShutterSpeed(double shutterSpeed) {
-        this.shutterSpeed = shutterSpeed;
+        this.shutterSpeed.setQuantizedValue(shutterSpeed);
     }
 
     public double getIso() {
-        return iso;
+        return iso.getCurrentVal();
+    }
+
+    public String getIsoString() {
+        return iso.getCurrentValAsString();
     }
 
     public void setIso(double iso) {
-        this.iso = iso;
+        this.aperture.setQuantizedValue(iso);
     }
 }
