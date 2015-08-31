@@ -34,7 +34,7 @@ public class Variable {
     }
 
     public double nextVal() {
-        currentIndex = Math.min(currentIndex + 1, keys.length);
+        currentIndex = Math.min(currentIndex + 1, keys.length - 1);
         return keys[currentIndex];
     }
 
