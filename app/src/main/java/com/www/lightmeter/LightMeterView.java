@@ -1,6 +1,7 @@
 package com.www.lightmeter;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -45,6 +46,21 @@ public class LightMeterView extends FrameLayout {
 
             }
         });
+        isoView.setOnTouchListener(new SwipeListener(isoView, new SwipeListener.OnSwipeEvent() {
+            @Override
+            public boolean SwipeEventDetected(View v, SwipeListener.SwipeTypeEnum swipeType) {
+                switch (swipeType) {
+                    case LEFT_TO_RIGHT:
+                        Log.e("www", "iso right swipe");
+                        return true;
+                    case RIGHT_TO_LEFT:
+                        Log.e("www", "iso left swipe");
+                        return true;
+                }
+                return false;
+            }
+        }));
+
         apertureView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,5 +113,9 @@ public class LightMeterView extends FrameLayout {
 
     public void setIso(double n) {
         isoView.setText("ISO: " + n);
+    }
+
+    public void SwipeEventDetected(View v, SwipeListener.SwipeTypeEnum SwipeType) {
+
     }
 }

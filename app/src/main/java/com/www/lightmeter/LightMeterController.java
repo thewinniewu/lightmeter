@@ -12,6 +12,7 @@ import android.util.Log;
  */
 public class LightMeterController implements SensorEventListener {
     private static final double LIGHTMETER_CONST = 400.0;
+
     private SensorManager mSensorManager;
     private Sensor lightSensor;
     private LightMeterView view;
