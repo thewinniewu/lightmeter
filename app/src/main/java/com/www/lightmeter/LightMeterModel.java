@@ -35,17 +35,21 @@ public class LightMeterModel {
             "1 / 2",
     };
 
-    Variable aperture = new Variable(apertureBrackets, null);
-    Variable shutterSpeed = new Variable(shutterBrackets, shutterBracketStrings);
-    Variable iso = new Variable(isoBrackets, null);
+    static Variable aperture = new Variable(apertureBrackets, null);
+    static Variable shutterSpeed = new Variable(shutterBrackets, shutterBracketStrings);
+    static Variable iso = new Variable(isoBrackets, null);
 
     public enum MeterVariable {
-        ISO, APERTURE, SHUTTER_SPEED
+        ISO(iso), APERTURE(aperture), SHUTTER_SPEED(shutterSpeed);
+
+        public Variable var;
+        MeterVariable(Variable var) {
+            this.var = var;
+        }
     }
 
     private MeterVariable meterVariable = MeterVariable.SHUTTER_SPEED;
     private float lux;
-
 
     public MeterVariable getMeterVariable() {
         return meterVariable;
@@ -96,6 +100,6 @@ public class LightMeterModel {
     }
 
     public void setIso(double iso) {
-        this.aperture.setQuantizedValue(iso);
+        this.iso.setQuantizedValue(iso);
     }
 }

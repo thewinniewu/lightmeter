@@ -72,7 +72,7 @@ public class LightMeterController implements SensorEventListener {
                 double newIso = (LIGHTMETER_CONST * N * N) / (t * lux);
                 Log.e("www", "new iso" + newIso);
                 model.setIso(newIso);
-                view.setIso(newIso);
+                view.setIso(model.getIso());
                 s = model.getIsoString();
                 break;
         }
@@ -90,5 +90,25 @@ public class LightMeterController implements SensorEventListener {
         view.setIso(model.getIso());
         view.setShutterSpeed(model.getShutterSpeedString());
         view.setActive(model.getMeterVariable());
+    }
+
+    void setConstant(LightMeterModel.MeterVariable parameter, int direction) {
+        Variable var = parameter.var;
+        if (direction == LightMeterView.LEFT) {
+            var.prevVal();
+        } else {
+            var.nextVal();
+        }
+        switch (parameter) {
+            case ISO:
+                view.setIso(model.getIso());
+                break;
+            case APERTURE:
+                view.setAperture(model.getAperture());
+                break;
+            case SHUTTER_SPEED:
+                view.setShutterSpeed(model.getShutterSpeedString());
+                break;
+        }
     }
 }

@@ -10,6 +10,8 @@ import android.widget.TextView;
  * Created by winniewu on 8/19/15.
  */
 public class LightMeterView extends FrameLayout {
+    public static final int LEFT = 0;
+    public static final int RIGHT = 1;
     private final Activity activity;
     private final LightMeterController controller;
 
@@ -44,9 +46,11 @@ public class LightMeterView extends FrameLayout {
                         switch (swipeType) {
                             case LEFT_TO_RIGHT:
                                 Log.e("www", "iso right swipe");
+                                controller.setConstant(LightMeterModel.MeterVariable.ISO, RIGHT);
                                 return true;
                             case RIGHT_TO_LEFT:
                                 Log.e("www", "iso left swipe");
+                                controller.setConstant(LightMeterModel.MeterVariable.ISO, LEFT);
                                 return true;
                             case CLICK:
                                 Log.e("www", "click");
@@ -64,9 +68,11 @@ public class LightMeterView extends FrameLayout {
                         switch (swipeType) {
                             case LEFT_TO_RIGHT:
                                 Log.e("www", "aperture right swipe");
+                                controller.setConstant(LightMeterModel.MeterVariable.APERTURE, RIGHT);
                                 return true;
                             case RIGHT_TO_LEFT:
                                 Log.e("www", "aperture left swipe");
+                                controller.setConstant(LightMeterModel.MeterVariable.APERTURE, LEFT);
                                 return true;
                             case CLICK:
                                 Log.e("www", "click");
@@ -85,8 +91,10 @@ public class LightMeterView extends FrameLayout {
                         switch (swipeType) {
                             case LEFT_TO_RIGHT:
                                 Log.e("www", "shutter right swipe");
+                                controller.setConstant(LightMeterModel.MeterVariable.SHUTTER_SPEED, RIGHT);
                                 return true;
                             case RIGHT_TO_LEFT:
+                                controller.setConstant(LightMeterModel.MeterVariable.SHUTTER_SPEED, LEFT);
                                 Log.e("www", "shutter left swipe");
                                 return true;
                             case CLICK:
