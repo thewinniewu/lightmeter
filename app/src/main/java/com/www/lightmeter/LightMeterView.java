@@ -2,7 +2,6 @@ package com.www.lightmeter;
 
 import android.app.Activity;
 import android.util.Log;
-import android.view.DragEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -18,7 +17,6 @@ public class LightMeterView extends FrameLayout {
     private TextView apertureView;
     private TextView speedView;
     private TextView variableView;
-
 
     public LightMeterView(Activity activity, LightMeterController controller) {
         super(activity);
@@ -39,42 +37,66 @@ public class LightMeterView extends FrameLayout {
     }
 
     private void initializeListeners() {
-        isoView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controller.changeVariable(LightMeterModel.MeterVariable.ISO);
+        isoView.setOnTouchListener(
+                new SwipeListener(isoView, new SwipeListener.OnSwipeEvent() {
+                    @Override
+                    public boolean SwipeEventDetected(View v, SwipeListener.SwipeTypeEnum swipeType) {
+                        switch (swipeType) {
+                            case LEFT_TO_RIGHT:
+                                Log.e("www", "iso right swipe");
+                                return true;
+                            case RIGHT_TO_LEFT:
+                                Log.e("www", "iso left swipe");
+                                return true;
+                            case CLICK:
+                                Log.e("www", "click");
+                                controller.changeVariable(LightMeterModel.MeterVariable.ISO);
+                                return true;
+                        }
+                        return false;
+                    }
+                }));
 
-            }
-        });
-        isoView.setOnTouchListener(new SwipeListener(isoView, new SwipeListener.OnSwipeEvent() {
-            @Override
-            public boolean SwipeEventDetected(View v, SwipeListener.SwipeTypeEnum swipeType) {
-                switch (swipeType) {
-                    case LEFT_TO_RIGHT:
-                        Log.e("www", "iso right swipe");
-                        return true;
-                    case RIGHT_TO_LEFT:
-                        Log.e("www", "iso left swipe");
-                        return true;
-                }
-                return false;
-            }
-        }));
+        apertureView.setOnTouchListener(
+                new SwipeListener(apertureView, new SwipeListener.OnSwipeEvent() {
+                    @Override
+                    public boolean SwipeEventDetected(View v, SwipeListener.SwipeTypeEnum swipeType) {
+                        switch (swipeType) {
+                            case LEFT_TO_RIGHT:
+                                Log.e("www", "aperture right swipe");
+                                return true;
+                            case RIGHT_TO_LEFT:
+                                Log.e("www", "aperture left swipe");
+                                return true;
+                            case CLICK:
+                                Log.e("www", "click");
+                                controller.changeVariable(LightMeterModel.MeterVariable.APERTURE);
+                                return true;
+                        }
+                        return false;
+                    }
+                }));
 
-        apertureView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controller.changeVariable(LightMeterModel.MeterVariable.APERTURE);
 
-            }
-        });
-        speedView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                controller.changeVariable(LightMeterModel.MeterVariable.SHUTTER_SPEED);
-
-            }
-        });
+        speedView.setOnTouchListener(
+                new SwipeListener(speedView, new SwipeListener.OnSwipeEvent() {
+                    @Override
+                    public boolean SwipeEventDetected(View v, SwipeListener.SwipeTypeEnum swipeType) {
+                        switch (swipeType) {
+                            case LEFT_TO_RIGHT:
+                                Log.e("www", "shutter right swipe");
+                                return true;
+                            case RIGHT_TO_LEFT:
+                                Log.e("www", "shutter left swipe");
+                                return true;
+                            case CLICK:
+                                Log.e("www", "click");
+                                controller.changeVariable(LightMeterModel.MeterVariable.SHUTTER_SPEED);
+                                return true;
+                        }
+                        return false;
+                    }
+                }));
     }
 
     public void updateDebug(String debugString) {
@@ -113,9 +135,5 @@ public class LightMeterView extends FrameLayout {
 
     public void setIso(double n) {
         isoView.setText("ISO: " + n);
-    }
-
-    public void SwipeEventDetected(View v, SwipeListener.SwipeTypeEnum SwipeType) {
-
     }
 }

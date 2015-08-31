@@ -52,6 +52,7 @@ public class LightMeterController implements SensorEventListener {
     }
 
     private void setNewVariableVal(float lux) {
+        model.setLux(lux);
         String s = null;
         double N = model.getAperture();
         double t = model.getShutterSpeed();
@@ -102,6 +103,7 @@ public class LightMeterController implements SensorEventListener {
     void changeVariable(LightMeterModel.MeterVariable variable) {
         model.setMeterVariable(variable);
         view.setActive(variable);
+        setNewVariableVal(model.getLux());
     }
 
     void initNonvariables() {

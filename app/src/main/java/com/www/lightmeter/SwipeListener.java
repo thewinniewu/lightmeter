@@ -9,11 +9,12 @@ import android.view.View;
  */
 public class SwipeListener implements View.OnTouchListener {
     private final static int MIN_SWIPE_DIST = 100;
+    private final static int MIN_PRESS_TIME = 10;
     private float downX, downY, upX, upY;
     private View v;
 
     public enum SwipeTypeEnum {
-        RIGHT_TO_LEFT, LEFT_TO_RIGHT, TOP_TO_BOTTOM, BOTTOM_TO_TOP
+        RIGHT_TO_LEFT, LEFT_TO_RIGHT, TOP_TO_BOTTOM, BOTTOM_TO_TOP, CLICK
     }
 
     abstract static public class OnSwipeEvent {
@@ -54,6 +55,12 @@ public class SwipeListener implements View.OnTouchListener {
             swipeEventListener.SwipeEventDetected(v, SwipeTypeEnum.BOTTOM_TO_TOP);
     }
 
+    public void onClick() {
+        if (swipeEventListener != null)
+            swipeEventListener.SwipeEventDetected(v, SwipeTypeEnum.CLICK);
+    }
+
+
     public boolean onTouch(View v, MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN: {
@@ -68,39 +75,33 @@ public class SwipeListener implements View.OnTouchListener {
                 float deltaX = downX - upX;
                 float deltaY = downY - upY;
 
-                //HORIZONTAL SCROLL
-                if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                    if (Math.abs(deltaX) > MIN_SWIPE_DIST) {
-                        // left or right
-                        if (deltaX < 0) {
-                            this.onLeftToRightSwipe();
-                            return true;
-                        }
-                        if (deltaX > 0) {
-                            this.onRightToLeftSwipe();
-                            return true;
-                        }
-                    } else {
-                        return false;
+                if (Math.abs(deltaX) > Math.abs(deltaY) &&
+                        Math.abs(deltaX) > MIN_SWIPE_DIST) {
+                    //HORIZONTAL SCROLL
+                    if (deltaX < 0) {
+                        this.onLeftToRightSwipe();
+                        return true;
                     }
-                }
-                //VERTICAL SCROLL
-                else {
-                    if (Math.abs(deltaY) > MIN_SWIPE_DIST) {
-                        // top or down
-                        if (deltaY < 0) {
-                            this.onTopToBottomSwipe();
-                            return true;
-                        }
-                        if (deltaY > 0) {
-                            this.onBottomToTopSwipe();
-                            return true;
-                        }
-                    } else {
-                        return false;
+                    if (deltaX > 0) {
+                        this.onRightToLeftSwipe();
+                        return true;
                     }
+                } else if (Math.abs(deltaY) > MIN_SWIPE_DIST) {
+                    //VERTICAL SCROLL
+                    if (deltaY < 0) {
+                        this.onTopToBottomSwipe();
+                        return true;
+                    }
+                    if (deltaY > 0) {
+                        this.onBottomToTopSwipe();
+                        return true;
+                    }
+                } else if (event.getEventTime() - event.getDownTime() > MIN_PRESS_TIME) {
+                    // regular press
+                    this.onClick();
+                    return true;
                 }
-                return true;
+                return false;
             }
         }
         return false;
